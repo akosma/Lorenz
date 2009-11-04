@@ -80,7 +80,7 @@ static CGFloat distanceBetweenPoints(CGPoint firstPoint, CGPoint secondPoint)
         rotationAngles[2] = 0.0;
         
         drawMode = GL_POINTS;
-        zTransform = -80.0;
+        zTransform = -30.0;
         
         self.multipleTouchEnabled = YES;
         
@@ -312,6 +312,7 @@ static CGFloat distanceBetweenPoints(CGPoint firstPoint, CGPoint secondPoint)
     glViewport(0, 0, rect.size.width, rect.size.height);
 	
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glTranslatef(0.0, 0.0, zTransform);
 }
 
 - (void)destroyFramebuffer 

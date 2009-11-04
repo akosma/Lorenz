@@ -16,6 +16,8 @@
 		3A0DFB8110A179CA008684D5 /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0DFB7D10A179CA008684D5 /* EAGLView.m */; };
 		3A0DFB8610A179F2008684D5 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A0DFB8410A179F2008684D5 /* Entitlements.plist */; };
 		3A0DFB8710A179F2008684D5 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A0DFB8510A179F2008684D5 /* MainWindow.xib */; };
+		3AEDB4CA10A19E8600F50DFC /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AEDB4C810A19E8600F50DFC /* Default.png */; };
+		3AEDB4CB10A19E8600F50DFC /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AEDB4C910A19E8600F50DFC /* Icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		3A0DFBD210A17FA9008684D5 /* values.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = values.inc; sourceTree = "<group>"; };
 		3AEDB37010A1825D00F50DFC /* build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = "<group>"; };
 		3AEDB37110A1825D00F50DFC /* lorenz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lorenz.c; sourceTree = "<group>"; };
+		3AEDB4C810A19E8600F50DFC /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		3AEDB4C910A19E8600F50DFC /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Lorenz-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Lorenz-Info.plist"; path = "../Lorenz-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,6 +129,8 @@
 		3A0DFB8310A179F2008684D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AEDB4C810A19E8600F50DFC /* Default.png */,
+				3AEDB4C910A19E8600F50DFC /* Icon.png */,
 				8D1107310486CEB800E47090 /* Lorenz-Info.plist */,
 				3A0DFB8410A179F2008684D5 /* Entitlements.plist */,
 				3A0DFB8510A179F2008684D5 /* MainWindow.xib */,
@@ -185,6 +191,8 @@
 			files = (
 				3A0DFB8610A179F2008684D5 /* Entitlements.plist in Resources */,
 				3A0DFB8710A179F2008684D5 /* MainWindow.xib in Resources */,
+				3AEDB4CA10A19E8600F50DFC /* Default.png in Resources */,
+				3AEDB4CB10A19E8600F50DFC /* Icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
