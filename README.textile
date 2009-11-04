@@ -1,0 +1,13 @@
+h1. Lorenz Attractor for the iPhone
+
+This code is an iPhone application using OpenGL ES 1.1 to show the Lorenz attractor in a 3D space.
+
+h2. Helper
+
+There is a "lorenz" subfolder with a simple C program used to generate the 3D coordinates of the points in the Lorenz attractor. The "build.sh" script compiles, executes and saves the output into a "values.inc" file, later used by the OpenGL view to generate the 3D object.
+
+h2. Resources:
+
+* "A tutorial on ‘dynamic’ arrays in C":http://fydo.net/gamedev/dynamic-arrays
+* "The Lorenz Attractor In 3D":http://ozviz.wasp.uwa.edu.au/~pbourke/fractals/lorenz/
+* "iPhone OpenGL ES Tutorial Series":http://web.me.com/smaurice/AppleCoder/iPhone_OpenGL/Archive.html
