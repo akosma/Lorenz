@@ -5,5 +5,6 @@
 # the Lorenz attractor on a 3D space.
 
 gcc lorenz.c -o lorenz
-./lorenz > ../Classes/Views/values.inc
+./lorenz > ../iPhone/Classes/Views/values.inc
+./lorenz > ../Mac/Classes/values.inc
 rm lorenz
