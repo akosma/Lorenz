@@ -14,6 +14,8 @@
 @interface EAGLView : UIView 
 {
 @private
+    IBOutlet UISwitch *toggleButton;
+    
     GLint backingWidth;
     GLint backingHeight;
     
@@ -27,7 +29,11 @@
     NSTimeInterval animationInterval;
 
     GLfloat rotationAngles[3];
+    GLfloat zTransform;
     CGPoint startTouchPosition;
+    CGPoint startTouchPosition2;
+    
+    GLenum drawMode;
 }
 
 - (void)startAnimation;
@@ -36,5 +42,7 @@
 
 - (void)setupView;
 - (void)checkGLError:(BOOL)visibleCheck;
+
+- (IBAction)toggleLinesAndPoints:(id)sender;
 
 @end

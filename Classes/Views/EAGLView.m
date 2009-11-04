@@ -15,19 +15,41 @@
 #define DEGREES_TO_RADIANS(__ANGLE) ((__ANGLE) / 180.0 * M_PI)
 
 @interface EAGLView ()
-
-- (BOOL) createFramebuffer;
-- (void) destroyFramebuffer;
-
+- (BOOL)createFramebuffer;
+- (void)destroyFramebuffer;
 @end
 
+// This code comes from
+// http://forums.macrumors.com/archive/index.php/t-508042.html
+static CGFloat distanceBetweenPoints(CGPoint firstPoint, CGPoint secondPoint) 
+{
+    CGFloat distance;
+    
+    //Square difference in x
+    CGFloat xDifferenceSquared = pow(firstPoint.x - secondPoint.x, 2);
+    // NSLog(@"xDifferenceSquared: %f", xDifferenceSquared);
+    
+    // Square difference in y
+    CGFloat yDifferenceSquared = pow(firstPoint.y - secondPoint.y, 2);
+    // NSLog(@"yDifferenceSquared: %f", yDifferenceSquared);
+    
+    // Add and take Square root
+    distance = sqrt(xDifferenceSquared + yDifferenceSquared);
+    return distance;
+}
 
 @implementation EAGLView
+
+#pragma mark -
+#pragma mark Static methods
 
 + (Class)layerClass 
 {
     return [CAEAGLLayer class];
 }
+
+#pragma mark -
+#pragma mark Init and dealloc
 
 - (id)initWithCoder:(NSCoder*)coder 
 {
@@ -57,6 +79,11 @@
         rotationAngles[1] = 0.0;
         rotationAngles[2] = 0.0;
         
+        drawMode = GL_POINTS;
+        zTransform = -80.0;
+        
+        self.multipleTouchEnabled = YES;
+        
 		[self setupView];
     }
     return self;
@@ -76,6 +103,21 @@
 }
 
 #pragma mark -
+#pragma mark IBAction methods
+
+- (IBAction)toggleLinesAndPoints:(id)sender
+{
+    if (toggleButton.on)
+    {
+        drawMode = GL_LINE_STRIP;
+    }
+    else 
+    {
+        drawMode = GL_POINTS;
+    }
+}
+
+#pragma mark -
 #pragma mark Public methods
 
 - (void)drawView 
@@ -90,20 +132,29 @@
     [EAGLContext setCurrentContext:context];    
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
+    glTranslatef(0.0, 0.0, zTransform);
+    glRotatef(rotationAngles[0], 1.0, 0.0, 0.0);
+    glRotatef(rotationAngles[1], 0.0, 1.0, 0.0);
+    glRotatef(rotationAngles[2], 0.0, 0.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glEnable(GL_POINT_SMOOTH);
+    if (drawMode == GL_POINTS)
+    {
+        glEnable(GL_POINT_SMOOTH);
+    }
+    else 
+    {
+        glEnable(GL_LINE_STRIP);
+    }
+
     glPointSize(1.0);
     glVertexPointer(3, GL_FLOAT, 0, points);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_POINTS, 0, points_count);
+    glDrawArrays(drawMode, 0, points_count);
     
 	glLoadIdentity();
-    glRotatef(rotationAngles[0], 1.0, 0.0, 0.0);
-    glRotatef(rotationAngles[1], 0.0, 1.0, 0.0);
-    glRotatef(rotationAngles[2], 0.0, 0.0, 1.0);
     
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
@@ -111,32 +162,76 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event 
 {
-    UITouch *t = [touches anyObject];
-    startTouchPosition = [t locationInView:t.view];
+    NSArray *allTouches = [touches allObjects];
+    NSInteger touchesCount = [allTouches count];
+    
+    if (touchesCount > 0)
+    {
+        UITouch *t = [allTouches objectAtIndex:0];
+        startTouchPosition = [t locationInView:t.view];
+    }
+    
+    if (touchesCount > 1)
+    {
+        UITouch *t = [allTouches objectAtIndex:1];
+        startTouchPosition2 = [t locationInView:t.view];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *t = [touches anyObject];
-    CGPoint endTouchPosition = [t locationInView:t.view];
-    if (startTouchPosition.x < endTouchPosition.x)
-    {
-        rotationAngles[1] += ROTATION_ANGLE_STEP;
-    }
-    else if (startTouchPosition.x > endTouchPosition.x)
-    {
-        rotationAngles[1] -= ROTATION_ANGLE_STEP;
-    }
+    NSArray *allTouches = [touches allObjects];
+    NSInteger touchesCount = [allTouches count];
 
-    if (startTouchPosition.y < endTouchPosition.y)
+    if (touchesCount == 1)
     {
-        rotationAngles[0] += ROTATION_ANGLE_STEP;
+        UITouch *t = [allTouches objectAtIndex:0];
+        CGPoint endTouchPosition = [t locationInView:t.view];
+
+        if (startTouchPosition.y < endTouchPosition.y)
+        {
+            rotationAngles[0] += ROTATION_ANGLE_STEP;
+        }
+        else if (startTouchPosition.y > endTouchPosition.y)
+        {
+            rotationAngles[0] -= ROTATION_ANGLE_STEP;
+        }
+        
+        if (startTouchPosition.x < endTouchPosition.x)
+        {
+            rotationAngles[1] += ROTATION_ANGLE_STEP;
+        }
+        else if (startTouchPosition.x > endTouchPosition.x)
+        {
+            rotationAngles[1] -= ROTATION_ANGLE_STEP;
+        }
+
+        startTouchPosition = endTouchPosition;
     }
-    else if (startTouchPosition.y > endTouchPosition.y)
+    
+    if (touchesCount == 2)
     {
-        rotationAngles[0] -= ROTATION_ANGLE_STEP;
+        UITouch *t1 = [allTouches objectAtIndex:0];
+        CGPoint endTouchPosition = [t1 locationInView:t1.view];
+
+        UITouch *t2 = [allTouches objectAtIndex:1];
+        CGPoint endTouchPosition2 = [t2 locationInView:t2.view];
+
+        CGFloat oldDistance = distanceBetweenPoints(startTouchPosition, startTouchPosition2);
+        CGFloat newDistance = distanceBetweenPoints(endTouchPosition, endTouchPosition2);
+        
+        if (oldDistance < newDistance)
+        {
+            zTransform += 10.0;
+        }
+        else 
+        {
+            zTransform -= 10.0;
+        }
+        
+        startTouchPosition = endTouchPosition;
+        startTouchPosition2 = endTouchPosition2;
     }
-    startTouchPosition = endTouchPosition;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event 
@@ -217,7 +312,6 @@
     glViewport(0, 0, rect.size.width, rect.size.height);
 	
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glTranslatef(0.0, 0.0, -80.0);
 }
 
 - (void)destroyFramebuffer 
