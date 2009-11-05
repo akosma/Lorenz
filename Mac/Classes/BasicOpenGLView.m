@@ -117,21 +117,52 @@ GLenum glReportError (void)
 
 // ===================================
 
-@implementation BasicOpenGLView
-
-// pixel format definition
-+ (NSOpenGLPixelFormat*) basicPixelFormat
+static NSOpenGLPixelFormat *GetOpenGLPixelFormat()
 {
-    NSOpenGLPixelFormatAttribute attributes [] = {
-        NSOpenGLPFAWindow,
-        NSOpenGLPFADoubleBuffer,	// double buffered
-        NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16, // 16 bit depth buffer
-        (NSOpenGLPixelFormatAttribute)0
+    // Antialised, hardware accelerated without fallback to the software renderer.
+    
+    NSOpenGLPixelFormatAttribute   attribsAntialised[] =
+    {
+        NSOpenGLPFAAccelerated,
+        NSOpenGLPFANoRecovery,
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFAColorSize, 24,
+        NSOpenGLPFAAlphaSize,  8,
+        NSOpenGLPFAMultisample,
+        NSOpenGLPFASampleBuffers, 1,
+        NSOpenGLPFASamples, 4,
+        0
     };
-    return [[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes] autorelease];
-}
+    
+    NSOpenGLPixelFormat  *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribsAntialised];
+    
+    if( pixelFormat == nil ) 
+    {
+        // If we can't get the desired pixel format then fewer attributes 
+        // will be rerquested.
+        
+        NSOpenGLPixelFormatAttribute   attribsBasic[] =
+        {
+            NSOpenGLPFAAccelerated,
+            NSOpenGLPFADoubleBuffer,
+            NSOpenGLPFAColorSize, 24,
+            NSOpenGLPFAAlphaSize,  8,
+            0
+        };
+        
+        pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribsBasic];
+        
+        [[NSAlert alertWithMessageText:@"WARNING" 
+                         defaultButton:@"Okay" 
+                       alternateButton:nil 
+                           otherButton:nil 
+             informativeTextWithFormat:@"Basic pixel format was allocated!"] runModal];
+    } // if
+    
+    return( pixelFormat );
+} // GetOpenGLPixelFormat
 
-// ---------------------------------
+@implementation BasicOpenGLView
 
 // update the projection matrix based on camera and view info
 - (void) updateProjection
@@ -470,38 +501,76 @@ GLenum glReportError (void)
 
 - (IBAction)printBitmap:(id)sender
 {
-    if (fAnimate)
+    BOOL wasAnimating = fAnimate;
+    if (wasAnimating)
     {
         // This will stop the animation
         [self animate:self];
     }
 
-    [[self window] setFrame:NSMakeRect(0.0, 0.0, 5000.0, 5000.0) display:YES];
-    [self drawRect:[self bounds]];
-    
-    glReadBuffer(GL_FRONT);
-    
-    //Read OpenGL context pixels directly.
-    
-    // For extra safety, save & restore OpenGL states that are changed
-    glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
-    
-    glPixelStorei(GL_PACK_ALIGNMENT, 4); /* Force 4-byte alignment */
-    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
-    glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-    glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
-    
-    mWidth = [self frame].size.width;
-    mHeight = [self frame].size.height;
+    NSSavePanel *savePanel = [NSSavePanel savePanel];
+    [savePanel setRequiredFileType:@"tiff"];
+    NSInteger result = [savePanel runModal];
+    if (result == NSFileHandlingPanelOKButton)
+    {
+        NSURL *url = [savePanel URL];
+        
+        NSRect originalWindowFrame = [[self window] frame];
+        NSRect originalFrame = [self frame];
+        NSRect bigFrame = NSMakeRect(0.0, 0.0, 2000.0, 2000.0);
+        NSWindow *bigWindow = [[NSWindow alloc] initWithContentRect:originalWindowFrame
+                                                          styleMask:NSBorderlessWindowMask
+                                                            backing:NSBackingStoreBuffered
+                                                              defer:NO 
+                                                             screen:nil];
+        NSWindow *originalWindow = [self window];
+        [[bigWindow contentView] addSubview:self];
 
-    mByteWidth = mWidth * 4;                // Assume 4 bytes/pixel for now
-    mByteWidth = (mByteWidth + 3) & ~3;    // Align to 4 bytes
-    
-    mData = malloc(mByteWidth * mHeight);
-    
-    glReadPixels(0.0, 0.0, mWidth, mHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, mData);
+//        GLdouble oldAperture = camera.aperture;
+//        CGFloat factor = bigFrame.size.height / originalFrame.size.height;
+//        camera.aperture = camera.aperture * factor;
+//        [self updateProjection];
 
-    [self createTIFFImageFileOnDesktop];
+        [bigWindow setFrame:bigFrame display:YES];
+
+        glReadBuffer(GL_FRONT);
+        
+        //Read OpenGL context pixels directly.
+        
+        // For extra safety, save & restore OpenGL states that are changed
+        glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+        
+        glPixelStorei(GL_PACK_ALIGNMENT, 4); /* Force 4-byte alignment */
+        glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+        glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+        
+        mWidth = [self frame].size.width;
+        mHeight = [self frame].size.height;
+        
+        mByteWidth = mWidth * 4;                // Assume 4 bytes/pixel for now
+        mByteWidth = (mByteWidth + 3) & ~3;    // Align to 4 bytes
+        
+        mData = malloc(mByteWidth * mHeight);
+        
+        glReadPixels(0.0, 0.0, mWidth, mHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, mData);
+        
+        [[originalWindow contentView] addSubview:self];
+        [self setFrame:originalFrame];
+//        camera.aperture = oldAperture;
+//        [self updateProjection];
+        [bigWindow release];
+        
+        [self drawRect:[self bounds]];
+        
+        [self createTIFFImageFile:url];
+    }
+    
+    if (wasAnimating)
+    {
+        // This will restart the animation if required
+        [self animate:self];
+    }    
 }
 
 -(CGImageRef)createRGBImageFromBufferData
@@ -533,7 +602,7 @@ GLenum glReportError (void)
 }
 
 
-- (void)createTIFFImageFileOnDesktop
+- (void)createTIFFImageFile:(NSURL *)url
 {
     // glReadPixels writes things from bottom to top, but we
     // need a top to bottom representation, so we must flip
@@ -544,26 +613,18 @@ GLenum glReportError (void)
     CGImageRef imageRef = [self createRGBImageFromBufferData];
     NSAssert( imageRef != 0, @"cgImageFromPixelBuffer failed");
     
-    NSSavePanel *savePanel = [NSSavePanel savePanel];
-    [savePanel setRequiredFileType:@"tiff"];
-    NSInteger result = [savePanel runModal];
-    if (result == NSFileHandlingPanelOKButton)
-    {
-        NSURL *url = [savePanel URL];
-
-        // Save the image to the file
-        CGImageDestinationRef dest = CGImageDestinationCreateWithURL((CFURLRef)url, CFSTR("public.tiff"), 1, nil);
-        NSAssert( dest != 0, @"CGImageDestinationCreateWithURL failed");
-        
-        // Set the image in the image destination to be `image' with
-        // optional properties specified in saved properties dict.
-        CGImageDestinationAddImage(dest, imageRef, nil);
-        
-        bool success = CGImageDestinationFinalize(dest);
-        NSAssert( success != 0, @"Image could not be written successfully");
-        
-        CFRelease(dest);
-    }
+    // Save the image to the file
+    CGImageDestinationRef dest = CGImageDestinationCreateWithURL((CFURLRef)url, CFSTR("public.tiff"), 1, nil);
+    NSAssert( dest != 0, @"CGImageDestinationCreateWithURL failed");
+    
+    // Set the image in the image destination to be `image' with
+    // optional properties specified in saved properties dict.
+    CGImageDestinationAddImage(dest, imageRef, nil);
+    
+    bool success = CGImageDestinationFinalize(dest);
+    NSAssert( success != 0, @"Image could not be written successfully");
+    
+    CFRelease(dest);
     CGImageRelease(imageRef);
 }
 
@@ -623,12 +684,6 @@ GLenum glReportError (void)
         [togglePointsAndLinesToolbarItem setLabel:@"Points"];
         [togglePointsAndLinesToolbarItem setImage:[NSImage imageNamed:@"Linkback Green.tiff"]];
     }
-    [self drawRect:[self bounds]];
-}
-
-- (IBAction)toggleSmooth:(id)sender
-{
-    smoothPointsLines = !smoothPointsLines;
     [self drawRect:[self bounds]];
 }
 
@@ -871,29 +926,19 @@ GLenum glReportError (void)
     getColorComponents(foregroundColor, &red, &green, &blue);
     glColor3f(red, green, blue);
     
+    glEnable(GL_MULTISAMPLE);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+    
     if (drawType == GL_POINTS)
     {
-        if (smoothPointsLines)
-        {
-            glEnable(GL_POINT_SMOOTH);
-        }
-        else 
-        {
-            glDisable(GL_POINT_SMOOTH);
-        }
-
+        glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
+        glEnable(GL_POINT_SMOOTH);
         glPointSize(pointSize);
     }
     else 
     {
-        if (smoothPointsLines)
-        {
-            glEnable(GL_LINE_SMOOTH);
-        }
-        else 
-        {
-            glDisable(GL_LINE_SMOOTH);
-        }
+        glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glEnable(GL_LINE_SMOOTH);
         glLineWidth(pointSize);
     }
     
@@ -958,7 +1003,7 @@ GLenum glReportError (void)
 
 -(id) initWithFrame: (NSRect) frameRect
 {
-	NSOpenGLPixelFormat * pf = [BasicOpenGLView basicPixelFormat];
+	NSOpenGLPixelFormat * pf = GetOpenGLPixelFormat();
 
 	self = [super initWithFrame: frameRect pixelFormat: pf];
     return self;
@@ -1004,7 +1049,6 @@ GLenum glReportError (void)
     
     drawType = GL_POINTS;
     pointSize = 1.0;
-    smoothPointsLines = YES;
 
 	// start animation timer
 	timer = [NSTimer timerWithTimeInterval:(1.0f/60.0f) target:self selector:@selector(animationTimer:) userInfo:nil repeats:YES];

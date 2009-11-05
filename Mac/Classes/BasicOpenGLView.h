@@ -55,7 +55,6 @@ typedef struct {
 
 	GLenum drawType;
     GLfloat pointSize;
-    BOOL smoothPointsLines;
 
     NSColor *foregroundColor;
     NSColor *backgroundColor;
@@ -70,8 +69,6 @@ typedef struct {
     long mHeight;
     void *mData;
 }
-
-+ (NSOpenGLPixelFormat*) basicPixelFormat;
 
 - (void)updateProjection;
 - (void)updateModelView;
@@ -93,7 +90,6 @@ typedef struct {
 - (IBAction)changeColor:(id)sender;
 - (IBAction)printBitmap:(id)sender;
 - (IBAction)changePointSize:(id)sender;
-- (IBAction)toggleSmooth:(id)sender;
 
 - (void)keyDown:(NSEvent *)theEvent;
 
@@ -121,6 +117,6 @@ typedef struct {
 - (id)initWithFrame: (NSRect) frameRect;
 - (void)awakeFromNib;
 - (void)flipImageData;
-- (void)createTIFFImageFileOnDesktop;
+- (void)createTIFFImageFile:(NSURL *)url;
 
 @end
