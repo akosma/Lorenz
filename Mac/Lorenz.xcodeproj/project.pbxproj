@@ -19,9 +19,10 @@
 		3A37C6F610A1C76300E8B7EC /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3A37C6F010A1C76300E8B7EC /* Credits.rtf */; };
 		3A37C6F710A1C76300E8B7EC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A37C6F110A1C76300E8B7EC /* InfoPlist.strings */; };
 		3A37C6F810A1C76300E8B7EC /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3A37C6F310A1C76300E8B7EC /* MainMenu.nib */; };
-		3A66983110A1CF2E003DA560 /* Blue Ball.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A66983010A1CF2E003DA560 /* Blue Ball.tiff */; };
 		3A66983310A1CF39003DA560 /* Get Info.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A66983210A1CF39003DA560 /* Get Info.tiff */; };
 		3A66984010A1CFD1003DA560 /* Play.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A66983E10A1CFD1003DA560 /* Play.tiff */; };
+		3AB96E6810A2FF20001D468A /* Linkback Green.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3AB96E6710A2FF20001D468A /* Linkback Green.tiff */; };
+		3AB96E6A10A2FF2F001D468A /* SnapBack.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3AB96E6910A2FF2F001D468A /* SnapBack.tiff */; };
 		745217950CA98A790067AF41 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 745217940CA98A790067AF41 /* OpenGL.framework */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -50,9 +51,10 @@
 		3A37C6F010A1C76300E8B7EC /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		3A37C6F210A1C76300E8B7EC /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3A37C6F410A1C76300E8B7EC /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		3A66983010A1CF2E003DA560 /* Blue Ball.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Blue Ball.tiff"; sourceTree = "<group>"; };
 		3A66983210A1CF39003DA560 /* Get Info.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Get Info.tiff"; sourceTree = "<group>"; };
 		3A66983E10A1CFD1003DA560 /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Play.tiff; sourceTree = "<group>"; };
+		3AB96E6710A2FF20001D468A /* Linkback Green.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Linkback Green.tiff"; sourceTree = "<group>"; };
+		3AB96E6910A2FF2F001D468A /* SnapBack.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SnapBack.tiff; sourceTree = "<group>"; };
 		7439218A0CC944C3009BCC59 /* ReadMe.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = ReadMe.rtfd; sourceTree = "<group>"; };
 		745217940CA98A790067AF41 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
@@ -150,11 +152,12 @@
 		3A37C6EE10A1C76300E8B7EC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AB96E6710A2FF20001D468A /* Linkback Green.tiff */,
+				3AB96E6910A2FF2F001D468A /* SnapBack.tiff */,
 				3A66983E10A1CFD1003DA560 /* Play.tiff */,
 				3A259AB810A2DE9A00B2987C /* Pause.tiff */,
 				3A259AB610A2DE6300B2987C /* Database.tiff */,
 				3A66983210A1CF39003DA560 /* Get Info.tiff */,
-				3A66983010A1CF2E003DA560 /* Blue Ball.tiff */,
 				3A37C6EF10A1C76300E8B7EC /* Lorenz.icns */,
 				3A37C6F010A1C76300E8B7EC /* Credits.rtf */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -211,11 +214,12 @@
 				3A37C6F610A1C76300E8B7EC /* Credits.rtf in Resources */,
 				3A37C6F710A1C76300E8B7EC /* InfoPlist.strings in Resources */,
 				3A37C6F810A1C76300E8B7EC /* MainMenu.nib in Resources */,
-				3A66983110A1CF2E003DA560 /* Blue Ball.tiff in Resources */,
 				3A66983310A1CF39003DA560 /* Get Info.tiff in Resources */,
 				3A66984010A1CFD1003DA560 /* Play.tiff in Resources */,
 				3A259AB710A2DE6300B2987C /* Database.tiff in Resources */,
 				3A259AB910A2DE9A00B2987C /* Pause.tiff in Resources */,
+				3AB96E6810A2FF20001D468A /* Linkback Green.tiff in Resources */,
+				3AB96E6A10A2FF2F001D468A /* SnapBack.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

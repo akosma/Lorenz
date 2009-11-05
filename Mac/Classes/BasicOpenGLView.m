@@ -256,12 +256,12 @@ GLenum glReportError (void)
    camera.viewPos.x = 0.0;
    camera.viewPos.y = 0.0;
    camera.viewPos.z = -80.0;
-   camera.viewDir.x = -camera.viewPos.x; 
-   camera.viewDir.y = -camera.viewPos.y; 
+   camera.viewDir.x = -camera.viewPos.x;
+   camera.viewDir.y = -camera.viewPos.y;
    camera.viewDir.z = -camera.viewPos.z;
 
-   camera.viewUp.x = 0;  
-   camera.viewUp.y = 1; 
+   camera.viewUp.x = 0;
+   camera.viewUp.y = 1;
    camera.viewUp.z = 0;
 }
 
@@ -462,6 +462,12 @@ GLenum glReportError (void)
 #pragma mark -
 #pragma mark IB Actions
 
+- (IBAction)changePointSize:(id)sender
+{
+    pointSize = (GLfloat)[sender floatValue];
+    [self drawRect:[self bounds]];
+}
+
 - (IBAction)printBitmap:(id)sender
 {
     if (fAnimate)
@@ -469,6 +475,9 @@ GLenum glReportError (void)
         // This will stop the animation
         [self animate:self];
     }
+
+    [[self window] setFrame:NSMakeRect(0.0, 0.0, 5000.0, 5000.0) display:YES];
+    [self drawRect:[self bounds]];
     
     glReadBuffer(GL_FRONT);
     
@@ -603,11 +612,23 @@ GLenum glReportError (void)
     if (drawType == GL_LINE_STRIP)
     {
         drawType = GL_POINTS;
+        [pointLineSizeToolbarItem setLabel:@"Point Size"];
+        [togglePointsAndLinesToolbarItem setLabel:@"Lines"];
+        [togglePointsAndLinesToolbarItem setImage:[NSImage imageNamed:@"SnapBack.tiff"]];
     }
-    else 
+    else
     {
         drawType = GL_LINE_STRIP;
+        [pointLineSizeToolbarItem setLabel:@"Line Width"];
+        [togglePointsAndLinesToolbarItem setLabel:@"Points"];
+        [togglePointsAndLinesToolbarItem setImage:[NSImage imageNamed:@"Linkback Green.tiff"]];
     }
+    [self drawRect:[self bounds]];
+}
+
+- (IBAction)toggleSmooth:(id)sender
+{
+    smoothPointsLines = !smoothPointsLines;
     [self drawRect:[self bounds]];
 }
 
@@ -852,16 +873,32 @@ GLenum glReportError (void)
     
     if (drawType == GL_POINTS)
     {
-        glEnable(GL_POINT_SMOOTH);
+        if (smoothPointsLines)
+        {
+            glEnable(GL_POINT_SMOOTH);
+        }
+        else 
+        {
+            glDisable(GL_POINT_SMOOTH);
+        }
+
+        glPointSize(pointSize);
     }
     else 
     {
-        glEnable(GL_LINE_SMOOTH);
+        if (smoothPointsLines)
+        {
+            glEnable(GL_LINE_SMOOTH);
+        }
+        else 
+        {
+            glDisable(GL_LINE_SMOOTH);
+        }
+        glLineWidth(pointSize);
     }
     
     int points_count = (sizeof points) / (sizeof(GLfloat)) / 3;
     
-    glPointSize(1.0);
     glVertexPointer(3, GL_FLOAT, 0, points);
     glEnableClientState(GL_VERTEX_ARRAY);
     glDrawArrays(drawType, 0, points_count);    
@@ -966,6 +1003,8 @@ GLenum glReportError (void)
     backgroundColor = [NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.0 alpha:1.0];
     
     drawType = GL_POINTS;
+    pointSize = 1.0;
+    smoothPointsLines = YES;
 
 	// start animation timer
 	timer = [NSTimer timerWithTimeInterval:(1.0f/60.0f) target:self selector:@selector(animationTimer:) userInfo:nil repeats:YES];

@@ -54,12 +54,16 @@ typedef struct {
 	GLfloat shapeSize;
 
 	GLenum drawType;
+    GLfloat pointSize;
+    BOOL smoothPointsLines;
 
     NSColor *foregroundColor;
     NSColor *backgroundColor;
     IBOutlet NSColorWell *foregroundColorWell;
     IBOutlet NSColorWell *backgroundColorWell;
     IBOutlet NSToolbarItem *playPauseToolbarItem;
+    IBOutlet NSToolbarItem *pointLineSizeToolbarItem;
+    IBOutlet NSToolbarItem *togglePointsAndLinesToolbarItem;
     
     long mByteWidth;
     long mWidth;
@@ -88,6 +92,8 @@ typedef struct {
 - (IBAction)togglePointsAndLines:(id)sender;
 - (IBAction)changeColor:(id)sender;
 - (IBAction)printBitmap:(id)sender;
+- (IBAction)changePointSize:(id)sender;
+- (IBAction)toggleSmooth:(id)sender;
 
 - (void)keyDown:(NSEvent *)theEvent;
 
