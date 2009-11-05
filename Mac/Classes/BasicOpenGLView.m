@@ -118,7 +118,7 @@ GLenum glReportError (void)
         NSOpenGLPFAWindow,
         NSOpenGLPFADoubleBuffer,	// double buffered
         NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16, // 16 bit depth buffer
-        (NSOpenGLPixelFormatAttribute)nil
+        (NSOpenGLPixelFormatAttribute)0
     };
     return [[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes] autorelease];
 }
@@ -418,7 +418,7 @@ GLenum glReportError (void)
 				[helpStringTex drawAtPoint:NSMakePoint (floor ((width - [helpStringTex frameSize].width) / 2.0f), floor ((height - [helpStringTex frameSize].height) / 3.0f))];
 			
 			if (fDrawCaps) {
-				long renderer;
+				GLint renderer;
 				[[self pixelFormat] getValues:&renderer forAttribute:NSOpenGLPFARendererID forVirtualScreen:[[self openGLContext] currentVirtualScreen]];
 				drawCaps (gDisplayCaps, gNumDisplays, renderer, width);
 			}
@@ -721,7 +721,7 @@ GLenum glReportError (void)
 // called after context is created
 - (void)prepareOpenGL
 {
-    long swapInt = 1;
+    const GLint swapInt = 1;
 
     [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; // set to vbl sync
 

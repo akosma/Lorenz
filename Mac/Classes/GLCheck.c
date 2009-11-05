@@ -58,11 +58,6 @@
  
 #include "GLCheck.h"
 
-#include <OpenGL/OpenGL.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/glext.h>
-
 #include <string.h>
 
 // -------------------------
@@ -148,9 +143,10 @@ unsigned char HaveOpenGLCapsChanged (GLCaps aDisplayCaps[],
     // get renderer info based on gDevice
     {
       CGLRendererInfoObj info;
-      long j, numRenderers = 0, rv = 0;
+        long j;
+      GLint numRenderers = 0, rv = 0;
       CGLError theErr = 0;
-      long deviceVRAM; // video memory in bytes
+      GLint deviceVRAM; // video memory in bytes
       unsigned long rendererID; // renderer ID
       
       theErr = CGLQueryRendererInfo (aDisplayCaps[i].cglDisplayMask, 
@@ -162,7 +158,7 @@ unsigned char HaveOpenGLCapsChanged (GLCaps aDisplayCaps[],
           CGLDescribeRenderer (info, j, kCGLRPAccelerated, &rv); 
           if (true == rv) { // if accelerated
             // what is the renderer ID
-            CGLDescribeRenderer (info, j, kCGLRPRendererID, (long *)&rendererID); 
+            CGLDescribeRenderer (info, j, kCGLRPRendererID, (GLint *)&rendererID); 
             if (rendererID != aDisplayCaps[i].rendererID) // check match
               return 1;
             // what is the VRAM
@@ -254,7 +250,9 @@ void CheckOpenGLCaps (CGDisplayCount maxDspys,
 
     { // get renderer info based on gDevice
       CGLRendererInfoObj info;
-      long j, numRenderers = 0, rv = 0;
+        long j;
+        GLint numRenderers = 0;
+        GLint rv = 0;
       CGLError theErr2 = 0;
       
       theErr2 = CGLQueryRendererInfo (dCaps[i].cglDisplayMask, 
@@ -290,7 +288,7 @@ void CheckOpenGLCaps (CGDisplayCount maxDspys,
                                             dCaps[i].cglDisplayMask, 
                                             (CGLPixelFormatAttribute)0 };
       CGLPixelFormatObj pixelFormat = NULL;
-      long numPixelFormats = 0;
+      GLint numPixelFormats = 0;
       CGLContextObj cglContext;
       
       curr_ctx = CGLGetCurrentContext (); // get current CGL context
