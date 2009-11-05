@@ -55,6 +55,14 @@ static void getCurrentCaps (void)
 	}
 }
 
+static void getColorComponents(NSColor *color, GLfloat *red, GLfloat *green, GLfloat *blue)
+{
+    NSColor *rgbColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    *red = (GLfloat)[rgbColor redComponent];
+    *green = (GLfloat)[rgbColor greenComponent];
+    *blue = (GLfloat)[rgbColor blueComponent];
+}
+
 #pragma mark ---- Utilities ----
 
 static CFAbsoluteTime gStartTime = 0.0f;
@@ -644,10 +652,8 @@ GLenum glReportError (void)
     {
         backgroundColor = [sender color];
 
-        GLfloat red = (GLfloat)[backgroundColor redComponent];
-        GLfloat green = (GLfloat)[backgroundColor greenComponent];
-        GLfloat blue = (GLfloat)[backgroundColor blueComponent];
-        
+        GLfloat red, green, blue;
+        getColorComponents(backgroundColor, &red, &green, &blue);
         glClearColor(red, green, blue, 0.0f);        
     }
     [self drawRect:[self bounds]];
@@ -840,9 +846,8 @@ GLenum glReportError (void)
 
 - (void)drawScene
 {
-    GLfloat red = (GLfloat)[foregroundColor redComponent];
-    GLfloat green = (GLfloat)[foregroundColor greenComponent];
-    GLfloat blue = (GLfloat)[foregroundColor blueComponent];
+    GLfloat red, green, blue;
+    getColorComponents(foregroundColor, &red, &green, &blue);
     glColor3f(red, green, blue);
     
     if (drawType == GL_POINTS)
@@ -880,10 +885,8 @@ GLenum glReportError (void)
 	glFrontFace(GL_CCW);
 	glPolygonOffset (1.0f, 1.0f);
 	
-    GLfloat red = (GLfloat)[backgroundColor redComponent];
-    GLfloat green = (GLfloat)[backgroundColor greenComponent];
-    GLfloat blue = (GLfloat)[backgroundColor blueComponent];
-    
+    GLfloat red, green, blue;
+    getColorComponents(backgroundColor, &red, &green, &blue);
 	glClearColor(red, green, blue, 0.0f);
 	[self resetCamera];
 	shapeSize = 120.0f; // max radius of of objects
