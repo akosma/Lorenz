@@ -59,6 +59,7 @@ typedef struct {
     NSColor *backgroundColor;
     IBOutlet NSColorWell *foregroundColorWell;
     IBOutlet NSColorWell *backgroundColorWell;
+    IBOutlet NSToolbarItem *playPauseToolbarItem;
     
     long mByteWidth;
     long mWidth;

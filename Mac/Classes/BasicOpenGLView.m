@@ -456,17 +456,23 @@ GLenum glReportError (void)
 
 - (IBAction)printBitmap:(id)sender
 {
-//    glReadBuffer(GL_FRONT);
-//    
-//    //Read OpenGL context pixels directly.
-//    
-//    // For extra safety, save & restore OpenGL states that are changed
-//    glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
-//    
-//    glPixelStorei(GL_PACK_ALIGNMENT, 4); /* Force 4-byte alignment */
-//    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
-//    glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-//    glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+    if (fAnimate)
+    {
+        // This will stop the animation
+        [self animate:self];
+    }
+    
+    glReadBuffer(GL_FRONT);
+    
+    //Read OpenGL context pixels directly.
+    
+    // For extra safety, save & restore OpenGL states that are changed
+    glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+    
+    glPixelStorei(GL_PACK_ALIGNMENT, 4); /* Force 4-byte alignment */
+    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+    glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
     
     mWidth = [self frame].size.width;
     mHeight = [self frame].size.height;
@@ -521,44 +527,27 @@ GLenum glReportError (void)
     CGImageRef imageRef = [self createRGBImageFromBufferData];
     NSAssert( imageRef != 0, @"cgImageFromPixelBuffer failed");
     
-    // Make full pathname to the desktop directory
-    NSString *desktopDirectory = nil;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains
-    (NSDesktopDirectory, NSUserDomainMask, YES);
-    if ([paths count] > 0)  
+    NSSavePanel *savePanel = [NSSavePanel savePanel];
+    [savePanel setRequiredFileType:@"tiff"];
+    NSInteger result = [savePanel runModal];
+    if (result == NSFileHandlingPanelOKButton)
     {
-        desktopDirectory = [paths objectAtIndex:0];
+        NSURL *url = [savePanel URL];
+
+        // Save the image to the file
+        CGImageDestinationRef dest = CGImageDestinationCreateWithURL((CFURLRef)url, CFSTR("public.tiff"), 1, nil);
+        NSAssert( dest != 0, @"CGImageDestinationCreateWithURL failed");
+        
+        // Set the image in the image destination to be `image' with
+        // optional properties specified in saved properties dict.
+        CGImageDestinationAddImage(dest, imageRef, nil);
+        
+        bool success = CGImageDestinationFinalize(dest);
+        NSAssert( success != 0, @"Image could not be written successfully");
+        
+        CFRelease(dest);
     }
-    
-    NSMutableString *fullFilePathStr = [NSMutableString stringWithString:desktopDirectory];
-    NSAssert( fullFilePathStr != nil, @"stringWithString failed");
-    [fullFilePathStr appendString:@"/ScreenSnapshot.tiff"];
-    
-    NSString *finalPath = [NSString stringWithString:fullFilePathStr];
-    NSAssert( finalPath != nil, @"stringWithString failed");
-    
-    CFURLRef url = CFURLCreateWithFileSystemPath (
-                                                  kCFAllocatorDefault,
-                                                  (CFStringRef)finalPath,
-                                                  kCFURLPOSIXPathStyle,
-                                                  false);
-    NSAssert( url != 0, @"CFURLCreateWithFileSystemPath failed");
-    // Save our screen bits to an image file on disk
-    
-    // Save the image to the file
-    CGImageDestinationRef dest = CGImageDestinationCreateWithURL(url, CFSTR("public.tiff"), 1, nil);
-    NSAssert( dest != 0, @"CGImageDestinationCreateWithURL failed");
-    
-    // Set the image in the image destination to be `image' with
-    // optional properties specified in saved properties dict.
-    CGImageDestinationAddImage(dest, imageRef, nil);
-    
-    bool success = CGImageDestinationFinalize(dest);
-    NSAssert( success != 0, @"Image could not be written successfully");
-    
-    CFRelease(dest);
     CGImageRelease(imageRef);
-    CFRelease(url);
 }
 
 - (void)flipImageData
@@ -618,9 +607,19 @@ GLenum glReportError (void)
 {
 	fAnimate = 1 - fAnimate;
 	if (fAnimate)
+    {
 		[animateMenuItem setState: NSOnState];
+        [playPauseToolbarItem setLabel:@"Pause"];
+        NSImage *image = [NSImage imageNamed:@"Pause.tiff"];
+        [playPauseToolbarItem setImage:image];
+    }   
 	else 
+    {
 		[animateMenuItem setState: NSOffState];
+        [playPauseToolbarItem setLabel:@"Play"];
+        NSImage *image = [NSImage imageNamed:@"Play.tiff"];
+        [playPauseToolbarItem setImage:image];
+    }
 }
 
 // ---------------------------------

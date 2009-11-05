@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A259AB710A2DE6300B2987C /* Database.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A259AB610A2DE6300B2987C /* Database.tiff */; };
+		3A259AB910A2DE9A00B2987C /* Pause.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A259AB810A2DE9A00B2987C /* Pause.tiff */; };
 		3A37C6E710A1C74E00E8B7EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A37C6DB10A1C74E00E8B7EC /* AppDelegate.m */; };
 		3A37C6E810A1C74E00E8B7EC /* BasicOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A37C6DD10A1C74E00E8B7EC /* BasicOpenGLView.m */; };
 		3A37C6E910A1C74E00E8B7EC /* drawInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A37C6DF10A1C74E00E8B7EC /* drawInfo.m */; };
@@ -29,6 +31,8 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Lorenz_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lorenz_Prefix.pch; sourceTree = "<group>"; };
+		3A259AB610A2DE6300B2987C /* Database.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Database.tiff; sourceTree = "<group>"; };
+		3A259AB810A2DE9A00B2987C /* Pause.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Pause.tiff; sourceTree = "<group>"; };
 		3A37C6DA10A1C74E00E8B7EC /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3A37C6DB10A1C74E00E8B7EC /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3A37C6DC10A1C74E00E8B7EC /* BasicOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicOpenGLView.h; sourceTree = "<group>"; };
@@ -147,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				3A66983E10A1CFD1003DA560 /* Play.tiff */,
+				3A259AB810A2DE9A00B2987C /* Pause.tiff */,
+				3A259AB610A2DE6300B2987C /* Database.tiff */,
 				3A66983210A1CF39003DA560 /* Get Info.tiff */,
 				3A66983010A1CF2E003DA560 /* Blue Ball.tiff */,
 				3A37C6EF10A1C76300E8B7EC /* Lorenz.icns */,
@@ -208,6 +214,8 @@
 				3A66983110A1CF2E003DA560 /* Blue Ball.tiff in Resources */,
 				3A66983310A1CF39003DA560 /* Get Info.tiff in Resources */,
 				3A66984010A1CFD1003DA560 /* Play.tiff in Resources */,
+				3A259AB710A2DE6300B2987C /* Database.tiff in Resources */,
+				3A259AB910A2DE9A00B2987C /* Pause.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
