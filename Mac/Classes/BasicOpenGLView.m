@@ -451,7 +451,8 @@ GLenum glReportError (void)
 	glReportError ();
 }
 
-#pragma mark ---- IB Actions ----
+#pragma mark -
+#pragma mark IB Actions
 
 -(IBAction)togglePointsAndLines:(id)sender
 {
@@ -746,7 +747,6 @@ GLenum glReportError (void)
 	stanStringAttrib = [[NSMutableDictionary dictionary] retain];
 	[stanStringAttrib setObject:font forKey:NSFontAttributeName];
 	[stanStringAttrib setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
-	[font release];
 	
 	// ensure strings are created
 	[self createHelpString];
