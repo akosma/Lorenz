@@ -454,7 +454,154 @@ GLenum glReportError (void)
 #pragma mark -
 #pragma mark IB Actions
 
--(IBAction)togglePointsAndLines:(id)sender
+- (IBAction)printBitmap:(id)sender
+{
+//    glReadBuffer(GL_FRONT);
+//    
+//    //Read OpenGL context pixels directly.
+//    
+//    // For extra safety, save & restore OpenGL states that are changed
+//    glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+//    
+//    glPixelStorei(GL_PACK_ALIGNMENT, 4); /* Force 4-byte alignment */
+//    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+//    glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+//    glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+    
+    mWidth = [self frame].size.width;
+    mHeight = [self frame].size.height;
+
+    mByteWidth = mWidth * 4;                // Assume 4 bytes/pixel for now
+    mByteWidth = (mByteWidth + 3) & ~3;    // Align to 4 bytes
+    
+    mData = malloc(mByteWidth * mHeight);
+    
+    glReadPixels(0.0, 0.0, mWidth, mHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, mData);
+
+    [self createTIFFImageFileOnDesktop];
+}
+
+-(CGImageRef)createRGBImageFromBufferData
+{
+    CGColorSpaceRef cSpace = CGColorSpaceCreateWithName (kCGColorSpaceGenericRGB);
+    NSAssert( cSpace != NULL, @"CGColorSpaceCreateWithName failure");
+    
+    CGContextRef bitmap = CGBitmapContextCreate(mData, mWidth, mHeight, 8, mByteWidth,
+                                                cSpace,  
+#if __BIG_ENDIAN__
+                                                kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Big /* XRGB Big Endian */);
+#else
+    kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little /* XRGB Little Endian */);
+#endif                                    
+    NSAssert( bitmap != NULL, @"CGBitmapContextCreate failure");
+    
+    // Get rid of color space
+    CFRelease(cSpace);
+    
+    // Make an image out of our bitmap; does a cheap vm_copy of the  
+    // bitmap
+    CGImageRef image = CGBitmapContextCreateImage(bitmap);
+    NSAssert( image != NULL, @"CGBitmapContextCreate failure");
+    
+    // Get rid of bitmap
+    CFRelease(bitmap);
+    
+    return image;
+}
+
+
+- (void)createTIFFImageFileOnDesktop
+{
+    // glReadPixels writes things from bottom to top, but we
+    // need a top to bottom representation, so we must flip
+    // the buffer contents.
+    [self flipImageData];
+    
+    // Create a Quartz image from our pixel buffer bits
+    CGImageRef imageRef = [self createRGBImageFromBufferData];
+    NSAssert( imageRef != 0, @"cgImageFromPixelBuffer failed");
+    
+    // Make full pathname to the desktop directory
+    NSString *desktopDirectory = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains
+    (NSDesktopDirectory, NSUserDomainMask, YES);
+    if ([paths count] > 0)  
+    {
+        desktopDirectory = [paths objectAtIndex:0];
+    }
+    
+    NSMutableString *fullFilePathStr = [NSMutableString stringWithString:desktopDirectory];
+    NSAssert( fullFilePathStr != nil, @"stringWithString failed");
+    [fullFilePathStr appendString:@"/ScreenSnapshot.tiff"];
+    
+    NSString *finalPath = [NSString stringWithString:fullFilePathStr];
+    NSAssert( finalPath != nil, @"stringWithString failed");
+    
+    CFURLRef url = CFURLCreateWithFileSystemPath (
+                                                  kCFAllocatorDefault,
+                                                  (CFStringRef)finalPath,
+                                                  kCFURLPOSIXPathStyle,
+                                                  false);
+    NSAssert( url != 0, @"CFURLCreateWithFileSystemPath failed");
+    // Save our screen bits to an image file on disk
+    
+    // Save the image to the file
+    CGImageDestinationRef dest = CGImageDestinationCreateWithURL(url, CFSTR("public.tiff"), 1, nil);
+    NSAssert( dest != 0, @"CGImageDestinationCreateWithURL failed");
+    
+    // Set the image in the image destination to be `image' with
+    // optional properties specified in saved properties dict.
+    CGImageDestinationAddImage(dest, imageRef, nil);
+    
+    bool success = CGImageDestinationFinalize(dest);
+    NSAssert( success != 0, @"Image could not be written successfully");
+    
+    CFRelease(dest);
+    CGImageRelease(imageRef);
+    CFRelease(url);
+}
+
+- (void)flipImageData
+{
+    long top, bottom;
+    void * buffer;
+    void * topP;
+    void * bottomP;
+    void * base;
+    long rowBytes;
+
+ 
+    top = 0;
+    bottom = mHeight - 1;
+    base = mData;
+    rowBytes = mByteWidth;
+    buffer = malloc(rowBytes);
+    NSAssert( buffer != nil, @"malloc failure");
+    
+    while ( top < bottom )
+    {
+        topP = (void *)((top * rowBytes) + (intptr_t)base);
+        bottomP = (void *)((bottom * rowBytes) + (intptr_t)base);
+        
+        /*
+         * Save and swap scanlines.
+         *
+         * This code does a simple in-place exchange with a temp buffer.
+         * If you need to reformat the pixels, replace the first two bcopy()
+         * calls with your own custom pixel reformatter.
+         */
+        bcopy( topP, buffer, rowBytes );
+        bcopy( bottomP, topP, rowBytes );
+        bcopy( buffer, bottomP, rowBytes );
+        
+        ++top;
+        --bottom;
+    }
+    free( buffer );
+}
+
+
+- (IBAction)togglePointsAndLines:(id)sender
 {
     if (drawType == GL_LINE_STRIP)
     {
@@ -467,7 +614,7 @@ GLenum glReportError (void)
     [self drawRect:[self bounds]];
 }
 
--(IBAction) animate: (id) sender
+- (IBAction)animate: (id) sender
 {
 	fAnimate = 1 - fAnimate;
 	if (fAnimate)
@@ -478,7 +625,7 @@ GLenum glReportError (void)
 
 // ---------------------------------
 
--(IBAction) info: (id) sender
+- (IBAction)info: (id) sender
 {
 	fInfo = 1 - fInfo;
 	if (fInfo)

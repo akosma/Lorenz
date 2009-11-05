@@ -59,6 +59,11 @@ typedef struct {
     NSColor *backgroundColor;
     IBOutlet NSColorWell *foregroundColorWell;
     IBOutlet NSColorWell *backgroundColorWell;
+    
+    long mByteWidth;
+    long mWidth;
+    long mHeight;
+    void *mData;
 }
 
 + (NSOpenGLPixelFormat*) basicPixelFormat;
@@ -81,6 +86,7 @@ typedef struct {
 - (IBAction)info: (id) sender;
 - (IBAction)togglePointsAndLines:(id)sender;
 - (IBAction)changeColor:(id)sender;
+- (IBAction)printBitmap:(id)sender;
 
 - (void)keyDown:(NSEvent *)theEvent;
 
@@ -107,5 +113,7 @@ typedef struct {
 
 - (id)initWithFrame: (NSRect) frameRect;
 - (void)awakeFromNib;
+- (void)flipImageData;
+- (void)createTIFFImageFileOnDesktop;
 
 @end

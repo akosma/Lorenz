@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="106"/>
+			<integer value="81"/>
 			<integer value="21"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -63,6 +63,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>15BDF62C-1CEC-4B04-B413-38B5D21F2BE3</string>
 							<string>3483AA17-8AD1-45E4-8E2A-E3846F2F358A</string>
 							<string>5B447837-A2BA-4A70-B3DD-9A521242D925</string>
 							<string>A49F82DB-3AB6-4BED-B734-6550AFB861E5</string>
@@ -75,6 +76,28 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="NSToolbarItem" id="357172286">
+								<object class="NSMutableString" key="NSToolbarItemIdentifier">
+									<characters key="NS.bytes">15BDF62C-1CEC-4B04-B413-38B5D21F2BE3</characters>
+								</object>
+								<string key="NSToolbarItemLabel">Print</string>
+								<string key="NSToolbarItemPaletteLabel">Print</string>
+								<string key="NSToolbarItemToolTip"/>
+								<nil key="NSToolbarItemView"/>
+								<object class="NSCustomResource" key="NSToolbarItemImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">NSToolbarPrint</string>
+								</object>
+								<nil key="NSToolbarItemTarget"/>
+								<nil key="NSToolbarItemAction"/>
+								<string key="NSToolbarItemMinSize">{0, 0}</string>
+								<string key="NSToolbarItemMaxSize">{0, 0}</string>
+								<bool key="NSToolbarItemEnabled">YES</bool>
+								<bool key="NSToolbarItemAutovalidates">YES</bool>
+								<int key="NSToolbarItemTag">-1</int>
+								<bool key="NSToolbarIsUserRemovable">YES</bool>
+								<int key="NSToolbarItemVisibilityPriority">0</int>
+							</object>
 							<object class="NSToolbarItem" id="555745263">
 								<object class="NSMutableString" key="NSToolbarItemIdentifier">
 									<characters key="NS.bytes">3483AA17-8AD1-45E4-8E2A-E3846F2F358A</characters>
@@ -328,6 +351,8 @@
 					</object>
 					<object class="NSArray" key="NSToolbarIBAllowedItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
+						<reference ref="555745263"/>
+						<reference ref="416278562"/>
 						<reference ref="628811697"/>
 						<reference ref="908433925"/>
 						<reference ref="651616270"/>
@@ -335,17 +360,18 @@
 						<reference ref="479936491"/>
 						<reference ref="220222031"/>
 						<reference ref="958050176"/>
-						<reference ref="555745263"/>
-						<reference ref="416278562"/>
+						<reference ref="357172286"/>
 					</object>
 					<object class="NSMutableArray" key="NSToolbarIBDefaultItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<reference ref="220222031"/>
-						<reference ref="555745263"/>
-						<reference ref="416278562"/>
+						<reference ref="357172286"/>
 						<reference ref="628811697"/>
 						<reference ref="908433925"/>
 						<reference ref="651616270"/>
+						<reference ref="220222031"/>
+						<reference ref="555745263"/>
+						<reference ref="416278562"/>
 						<reference ref="220222031"/>
 					</object>
 					<reference key="NSToolbarIBSelectableItems" ref="0"/>
@@ -1313,6 +1339,14 @@
 					</object>
 					<int key="connectionID">240</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">printBitmap:</string>
+						<reference key="source" ref="811714880"/>
+						<reference key="destination" ref="357172286"/>
+					</object>
+					<int key="connectionID">251</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1836,6 +1870,7 @@
 							<reference ref="651616270"/>
 							<reference ref="555745263"/>
 							<reference ref="416278562"/>
+							<reference ref="357172286"/>
 						</object>
 						<reference key="parent" ref="85525189"/>
 					</object>
@@ -1901,6 +1936,11 @@
 						<int key="objectID">233</int>
 						<reference key="object" ref="1022229726"/>
 						<reference key="parent" ref="416278562"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">249</int>
+						<reference key="object" ref="357172286"/>
+						<reference key="parent" ref="422561444"/>
 					</object>
 				</object>
 			</object>
@@ -2033,6 +2073,7 @@
 					<string>24.IBEditorWindowLastContentRect</string>
 					<string>24.IBPluginDependency</string>
 					<string>24.ImportedFromIB2</string>
+					<string>249.IBPluginDependency</string>
 					<string>29.IBEditorWindowLastContentRect</string>
 					<string>29.IBPluginDependency</string>
 					<string>29.ImportedFromIB2</string>
@@ -2175,15 +2216,15 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{133, 481}, {800, 620}}</string>
+					<string>{{161, 481}, {800, 620}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{133, 481}, {800, 620}}</string>
+					<string>{{161, 481}, {800, 620}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
 					<string>{213, 107}</string>
 					<boolean value="YES"/>
-					<string>{{225, 1101}, {616, 0}}</string>
+					<string>{{253, 1101}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2198,6 +2239,7 @@
 					<string>{{166, 1041}, {194, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{0, 1114}, {298, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
@@ -2253,7 +2295,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">240</int>
+			<int key="maxID">251</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2284,10 +2326,12 @@
 							<string>animate:</string>
 							<string>changeColor:</string>
 							<string>info:</string>
+							<string>printBitmap:</string>
 							<string>togglePointsAndLines:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
