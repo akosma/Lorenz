@@ -70,6 +70,9 @@ typedef struct {
     void *mData;
 }
 
+@property (nonatomic, retain) NSColor *foregroundColor;
+@property (nonatomic, retain) NSColor *backgroundColor;
+
 - (void)updateProjection;
 - (void)updateModelView;
 - (void)resizeGL;

@@ -164,6 +164,9 @@ static NSOpenGLPixelFormat *GetOpenGLPixelFormat()
 
 @implementation BasicOpenGLView
 
+@dynamic backgroundColor;
+@dynamic foregroundColor;
+
 // update the projection matrix based on camera and view info
 - (void) updateProjection
 {
@@ -722,17 +725,47 @@ static NSOpenGLPixelFormat *GetOpenGLPixelFormat()
 {
     if (sender == foregroundColorWell)
     {
-        foregroundColor = [sender color];
+        self.foregroundColor = [sender color];
     }
     else if (sender == backgroundColorWell)
     {
-        backgroundColor = [sender color];
+        self.backgroundColor = [sender color];
+    }
+}
 
+- (void)setForegroundColor:(NSColor *)newColor
+{
+    if (foregroundColor != newColor)
+    {
+        [foregroundColor release];
+        foregroundColor = [newColor retain];
+        
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (NSColor *)foregroundColor
+{
+    return foregroundColor;
+}
+
+- (void)setBackgroundColor:(NSColor *)newColor
+{
+    if (backgroundColor != newColor)
+    {
+        [backgroundColor release];
+        backgroundColor = [newColor retain];
+        
         GLfloat red, green, blue;
         getColorComponents(backgroundColor, &red, &green, &blue);
-        glClearColor(red, green, blue, 0.0f);        
+        glClearColor(red, green, blue, 0.0f);
+        [self setNeedsDisplay:YES];
     }
-    [self drawRect:[self bounds]];
+}
+
+- (NSColor *)backgroundColor
+{
+    return backgroundColor;
 }
 
 #pragma mark ---- Method Overrides ----
@@ -1044,8 +1077,8 @@ static NSOpenGLPixelFormat *GetOpenGLPixelFormat()
 	fAnimate = 1;
 	time = CFAbsoluteTimeGetCurrent ();  // set animation time start time
 	fDrawHelp = 1;
-    foregroundColor = [NSColor orangeColor];
-    backgroundColor = [NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+    foregroundColor = [[NSColor orangeColor] retain];
+    backgroundColor = [[NSColor blackColor] retain];
     
     drawType = GL_POINTS;
     pointSize = 1.0;
