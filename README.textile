@@ -1,6 +1,6 @@
-h1. Lorenz Attractor for the iPhone
+h1. Lorenz Attractor for iPhone OS and Mac OS X
 
-This code is an iPhone application using OpenGL ES 1.1 to show the Lorenz attractor in a 3D space.
+This code contains an iPhone, a Mac OS X application and a Mac OS X screensaver using OpenGL ES 1.1, featuring the Lorenz attractor in a 3D space.
 
 h2. Helper
 
@@ -11,3 +11,7 @@ h2. Resources:
 * "A tutorial on ‘dynamic’ arrays in C":http://fydo.net/gamedev/dynamic-arrays
 * "The Lorenz Attractor In 3D":http://ozviz.wasp.uwa.edu.au/~pbourke/fractals/lorenz/
 * "iPhone OpenGL ES Tutorial Series":http://web.me.com/smaurice/AppleCoder/iPhone_OpenGL/Archive.html
+
+h2. License
+
+This code is released under a liberal BSD license. See the LICENSE file for details.
